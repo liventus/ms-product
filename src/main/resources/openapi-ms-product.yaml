@@ -1,0 +1,166 @@
+openapi: 3.0.3
+info:
+  title: Product Microservice
+  description: Permite  realizar las transferencias entre Cuentas de Ahorros y Cuentas Corrientes.
+  version: "0.0.1"
+servers:
+  - url: /api/v1
+paths:
+  /product:
+    get:
+      summary: Obtener información de una cuenta bancaria
+      operationId: getClient
+      parameters:
+        - name: tipoDeDocumento
+          required: true
+          in: header
+          description: 'Header tipo de documento. Ej: 01, 02, 03, 04'
+          schema:
+            pattern: ^(01|04|06|07)$
+            type: string
+            example: 01
+        - name: numeroDeDocumento
+          required: true
+          in: header
+          description: 'Header numero de documento. Ej: 123456787'
+          schema:
+            pattern: ^[0-9]{8,12}$
+            type: string
+            example: 12345678
+      responses:
+        "200":
+          description: Información del cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductObject'
+        default:
+          description: Información detallada de la excepcion.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/status'
+
+    put:
+      summary: Actualizar información de un cliente
+      operationId: updateClient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductObject'
+      responses:
+        "200":
+          description: Información de la cuenta bancaria actualizada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductObject'
+        default:
+          description: Información detallada de la excepcion.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/status'
+    post:
+      summary: Obtener información de una cuenta bancaria
+      operationId: addClient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductObject'
+        required: true
+      responses:
+        "200":
+          description: Información detallada del cliente creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductObject'
+        default:
+          description: Información detallada de la excepcion.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/status'
+    delete:
+      summary: Eliminar cliente
+      operationId: deleteClient
+      parameters:
+        - name: tipoDeDocumento
+          required: true
+          in: header
+          description: 'Header tipo de documento. Ej: 01, 02, 03, 04'
+          schema:
+            pattern: ^(01|04|06|07)$
+            type: string
+            example: 01
+        - name: numeroDeDocumento
+          required: true
+          in: header
+          description: 'Header numero de documento. Ej: 123456787'
+          schema:
+            pattern: ^[0-9]{8,12}$
+            type: string
+            example: 12345678
+      responses:
+        "204":
+          description: eliminar cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/status'
+        default:
+          description: Información detallada de la excepcion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/status'
+  /products:
+    get:
+      summary: Obtener información de todas los clientes del banco
+      operationId: getClientAll
+      responses:
+        "200":
+          description: lista de productos
+          content:
+            application/stream+json:
+              schema:
+                $ref: '#/components/schemas/ProductObjectList'
+        default:
+          description: Información detallada del producto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/status'
+components:
+  schemas:
+    ProductObject:
+      type: object
+      properties:
+        id:
+          type: string
+        tipoDeProducto:
+          type: string
+        nombreDeProducto:
+          type: string
+        tipoDeCuenta:
+          type: object
+          properties:
+            code:
+              type: string
+            comision:
+              type: string
+    status:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    ProductObjectList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ProductObject'

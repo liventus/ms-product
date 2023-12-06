@@ -1,0 +1,22 @@
+package com.lizana.msproduct.model.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProductDto {
+
+    @Id
+    private String id;
+    private String tipoDeProducto;
+    private String nombreDeProducto;
+    private ProductTipoCuentDto tipoDeCuenta;
+
+
+}
