@@ -3,24 +3,22 @@ package com.lizana.msproduct.services;
 
 import com.lizana.msproduct.model.dto.ProductDto;
 import com.lizana.msproduct.model.dto.Status;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Maybe;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
 
 public interface ProductService {
 
     Maybe<ProductDto> saveProduct(ProductDto ProductObject);
 
-    Mono<ResponseEntity<Status>> deleteProduct(String tipoDeDocumento, String numeroDeDocumento, ServerWebExchange exchange);
+    Maybe<Status> deleteProduct(String idProducto);
 
-    Mono<ResponseEntity<ProductDto>> getProduct(String tipoDeDocumento, String numeroDeDocumento, ServerWebExchange exchange);
+    Maybe<ProductDto>  getProduct(String idProduct);
 
 
-    Mono<ResponseEntity<ProductDto>> updateProduct(Mono<ProductDto> ProductObject, ServerWebExchange exchange);
+    Maybe<ProductDto> updateProduct(ProductDto ProductObject);
 
-    Mono<ResponseEntity<Flux<ProductDto>>> getProductAll(ServerWebExchange exchange);
+    Flowable<ProductDto> getProductAll();
 
 
 
