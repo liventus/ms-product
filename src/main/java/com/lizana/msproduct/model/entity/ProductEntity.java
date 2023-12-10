@@ -1,6 +1,5 @@
 package com.lizana.msproduct.model.entity;
 
-import com.lizana.msproduct.model.dto.ProductTipoCuentDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,9 +15,15 @@ public class ProductEntity {
 
     @Id
     private String id;
-    private String tipoDeProducto;
-    private String nombreDeProducto;
-    private ProductTipoCuentDto tipoDeCuenta;
+    private String idDeProducto;
+    private Number comision;
+    private String tipoDeCuenta;
+    private String claseDeCuenta;
+    private Number limitMaxDepositoMensual;
+    private Number limitMaxRetiroMensual;
+    private Number limitMaxPagoMensual;
+    private Number limitMaxCredito;
+
 
 
 }

@@ -1,20 +1,19 @@
 package com.lizana.msproduct.services.impl;
 
 import com.lizana.msproduct.model.dto.ProductDto;
-import com.lizana.msproduct.model.dto.Status;
+import com.lizana.msproduct.model.dto.StatusResponse;
 import com.lizana.msproduct.model.entity.ProductEntity;
 import com.lizana.msproduct.repository.ProductRepository;
 import com.lizana.msproduct.services.ProductService;
 import com.lizana.msproduct.util.ProductUtil;
-import io.reactivex.rxjava3.core.Completable;
+import com.lizana.msproduct.util.ProductValidator;
+import com.lizana.msproduct.util.ValidatorException;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Maybe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
@@ -26,40 +25,52 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Maybe<ProductDto> saveProduct(ProductDto productDto) {
-        //guarda el producto
-        Mono<ProductEntity> savedEntity = productRepository.save(ProductUtil.dtoToEntity(productDto));
-        return Maybe.fromPublisher(savedEntity.map(ProductUtil::entityToDto));
+    public Maybe<StatusResponse> saveProduct(ProductDto productDto) {
+        try {
+            ProductValidator.validateClientObject(productDto);
+        } catch (ValidatorException ex) {
+            return Maybe.just(ex.getStatusResponse());
+        }
+        return Maybe
+                .fromPublisher(
+                        productRepository.save(ProductUtil.dtoToEntity(productDto))
+                                .map(ProductUtil::entityToDto)
+                                .map(x -> ProductUtil.setStatusResponse(HttpStatus.CREATED, x)));
+
     }
 
     @Override
-    public Maybe<Status> deleteProduct(String idProduct) {
+    public Maybe<StatusResponse> deleteProduct(String idProduct) {
         return Maybe.fromPublisher(
                 productRepository.findById(idProduct)
                         .flatMap(product -> {
                             if (product != null) {
-                                return productRepository.deleteById(product.getId())
-                                        .then(Mono.just(new Status("asd", "a")));
+                                return productRepository.deleteById(product.getIdDeProducto())
+                                        .then(Mono.just(new StatusResponse(13, "a", null)));
                             } else {
                                 return Mono.empty();
                             }
                         })
-                        .switchIfEmpty(Mono.just(new Status("NOT_FOUND", "Product not found")))
+                        .switchIfEmpty(Mono.just(new StatusResponse(123, "Product not found", null)))
         );
 
     }
 
     @Override
-    public Maybe<ProductDto> getProduct(String idProduct) {
+    public Maybe<StatusResponse> getProduct(String idProduct) {
         //extrae el producto
-        Mono<ProductEntity> para = productRepository.findById(idProduct);
-        return Maybe.fromPublisher(para.map(ProductUtil::entityToDto));
+
+        return Maybe.fromPublisher(productRepository.findById(idProduct)
+                .map(ProductUtil::entityToDto)
+                .map(x -> ProductUtil.setStatusResponse(HttpStatus.OK, x)));
     }
 
     @Override
-    public Maybe<ProductDto> updateProduct(ProductDto ProductObject) {
-        Mono<ProductEntity> updateEntity = productRepository.save(ProductUtil.dtoToEntity(ProductObject));
-        return Maybe.fromPublisher(updateEntity.map(ProductUtil::entityToDto));
+    public Maybe<StatusResponse> updateProduct(ProductDto ProductObject) {
+
+        return Maybe.fromPublisher(productRepository.save(ProductUtil.dtoToEntity(ProductObject))
+                .map(ProductUtil::entityToDto)
+                .map(x -> ProductUtil.setStatusResponse(HttpStatus.OK, x)));
     }
 
     @Override

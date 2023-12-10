@@ -12,11 +12,16 @@ import org.springframework.data.annotation.Id;
 @NoArgsConstructor
 public class ProductDto {
 
-    @Id
     private String id;
-    private String tipoDeProducto;
-    private String nombreDeProducto;
-    private ProductTipoCuentDto tipoDeCuenta;
+    private String idDeProducto;
+    private Number comision;
+    private String tipoDeCuenta;
+    private String claseDeCuenta;
+    private Number limitMaxDepositoMensual;
+    private Number limitMaxRetiroMensual;
+    private Number limitMaxPagoMensual;
+    private Number limitMaxCredito;
+
 
 
 }
