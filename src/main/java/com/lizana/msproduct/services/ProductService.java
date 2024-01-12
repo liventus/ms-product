@@ -3,22 +3,23 @@ package com.lizana.msproduct.services;
 
 import com.lizana.msproduct.model.dto.ProductDto;
 import com.lizana.msproduct.model.dto.StatusResponse;
-import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Maybe;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 
 public interface ProductService {
 
-    Maybe<StatusResponse> saveProduct(ProductDto ProductObject);
+    Mono<StatusResponse> create(ProductDto ProductObject);
 
-    Maybe<StatusResponse> deleteProduct(String idProducto);
+    Mono<StatusResponse> delete(String idProducto);
 
-    Maybe<StatusResponse>  getProduct(String idProduct);
+    Mono<StatusResponse> findById(String idProduct);
 
 
-    Maybe<StatusResponse> updateProduct(ProductDto ProductObject);
+    Mono<StatusResponse> update(ProductDto ProductObject);
 
-    Flowable<ProductDto> getProductAll();
+    Flux<ProductDto> findAll();
 
 
 

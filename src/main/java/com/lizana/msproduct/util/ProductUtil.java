@@ -14,17 +14,6 @@ import org.springframework.http.ResponseEntity;
 @NoArgsConstructor
 public class ProductUtil {
 
-    public static ProductDto entityToDto(ProductEntity productEntity) {
-        ProductDto productDto= new ProductDto();
-        BeanUtils.copyProperties(productEntity, productDto);
-        return productDto;
-    }
-
-    public static ProductEntity dtoToEntity(ProductDto productDto) {
-        ProductEntity productEntity = new ProductEntity();
-        BeanUtils.copyProperties(productDto, productEntity);
-        return productEntity;
-    }
 
 
     public  static StatusResponse setStatusResponse(HttpStatus http, ProductDto dto){
